@@ -32,8 +32,37 @@ jobs:
 
       - name: Run unit/API tests
         run: |
-          python -m pytest -v                                                                          
+          python -m pytest -v   
 
+  #3
+  secrets:
+    name: Secret scanning
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  #4
+  sast-bandit:
+    name: SAST with Bandit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.10"
+      - name: Install Bandit
+        run: |
+          pip install bandit
+      - name: Run Bandit
+        run: |
+          bandit -r . -x tests || true
 
   build:
     name: Build and test Docker image
