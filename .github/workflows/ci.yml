@@ -32,7 +32,7 @@ jobs:
 
       - name: Run unit/API tests
         run: |
-          python -m pytest -v   
+          python -m pytest -v tests 
 
   #3
   secrets:
